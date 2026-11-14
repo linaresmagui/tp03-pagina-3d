@@ -1,0 +1,736 @@
+/* =========================================================
+   1. FUENTES DE GOOGLE
+   Carga "Poppins" (títulos) e "Inter" (texto).
+   Si no hay internet, se usa system-ui (la fuente del sistema).
+   ========================================================= */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@500;600;700&display=swap");
+
+
+/* =========================================================
+   2. VARIABLES CSS (:root)
+   Acá guardamos colores, fuentes y medidas en un solo lugar.
+   Si querés cambiar un color, lo cambiás acá y se actualiza
+   en toda la página.
+   ========================================================= */
+:root {
+  /* Colores de cada sección */
+  --color-animales: #27AE60;          /* verde */
+  --color-animales-oscuro: #1E8449;   /* verde más oscuro para el hover */
+  --color-cuerpo: #FF6F61;            /* rojo coral */
+  --color-cuerpo-oscuro: #E5533F;
+  --color-historia: #D4A017;          /* dorado */
+  --color-historia-oscuro: #B8860B;
+
+  /* Colores generales */
+  --color-fondo: #F5F7FA;             /* fondo claro de la página */
+  --color-superficie: #FFFFFF;        /* fondo de tarjetas */
+  --color-texto: #2C3E50;             /* texto principal */
+  --color-texto-suave: #6B7A89;       /* texto secundario */
+  --color-borde: #E3E8EE;
+  --color-neutro: #34495E;            /* botones del pie */
+  --color-neutro-oscuro: #22313F;
+  --color-error: #D93025;             /* rojo para errores y para borrar */
+  --color-error-oscuro: #B3261E;
+  --color-error-fondo: #FDECEA;       /* fondo rosado suave del campo con error */
+
+  /* Color "activo": cada sección lo reemplaza por el suyo */
+  --color-seccion: var(--color-neutro);
+  --color-seccion-oscuro: var(--color-neutro-oscuro);
+
+  /* Tipografías con respaldo */
+  --fuente-titulos: "Poppins", system-ui, sans-serif;
+  --fuente-texto: "Inter", system-ui, sans-serif;
+
+  /* Medidas reutilizables */
+  --radio: 16px;                                  /* esquinas redondeadas */
+  --sombra: 0 4px 14px rgba(0, 0, 0, 0.08);       /* sombra suave */
+  --sombra-elevada: 0 8px 22px rgba(0, 0, 0, 0.14);
+  --transicion: 0.25s ease;
+}
+
+
+/* =========================================================
+   3. REINICIO BÁSICO
+   Quita márgenes por defecto del navegador y hace que el
+   ancho de los elementos incluya el padding y el borde.
+   ========================================================= */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Asegura que "hidden" siempre oculte, aunque otra regla
+   le ponga display: grid o flex al elemento */
+[hidden] {
+  display: none !important;
+}
+
+
+/* =========================================================
+   4. ESTILOS GENERALES DEL CUERPO Y TÍTULOS
+   ========================================================= */
+body {
+  font-family: var(--fuente-texto);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;   /* encabezado, contenido y pie, uno debajo del otro */
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--fuente-titulos);
+  line-height: 1.3;
+}
+
+main {
+  flex: 1;                  /* empuja el pie hacia abajo */
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+
+/* =========================================================
+   5. ENCABEZADO
+   ========================================================= */
+.encabezado {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+}
+
+.encabezado h1 {
+  font-size: 1.8rem;
+}
+
+/* Emoji decorativo antes del título principal */
+.encabezado h1::before {
+  content: "🌍 ";
+}
+
+.encabezado p {
+  color: var(--color-texto-suave);
+}
+
+
+/* =========================================================
+   6. PORTADA Y TARJETAS
+   Mobile first: una columna. Cada tarjeta tiene su color
+   según el atributo data-seccion.
+   ========================================================= */
+.portada {
+  display: grid;
+  grid-template-columns: 1fr;   /* una sola columna en celular */
+  gap: 1.25rem;
+}
+
+.tarjeta {
+  background-color: var(--color-superficie);
+  border: none;
+  border-top: 6px solid var(--color-seccion);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 2rem 1.5rem;
+  text-align: left;
+  font-family: var(--fuente-texto);
+  color: var(--color-texto);
+  cursor: pointer;
+  transition: transform var(--transicion), box-shadow var(--transicion);
+}
+
+.tarjeta h2 {
+  color: var(--color-seccion);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Efecto al pasar el mouse: se eleva un poco */
+.tarjeta:hover,
+.tarjeta:focus-visible {
+  transform: translateY(-4px);
+  box-shadow: var(--sombra-elevada);
+}
+
+/* Color y emoji de cada tarjeta */
+.tarjeta[data-seccion="seccion-animales"] { --color-seccion: var(--color-animales); }
+.tarjeta[data-seccion="seccion-cuerpo"]   { --color-seccion: var(--color-cuerpo); }
+.tarjeta[data-seccion="seccion-historia"] { --color-seccion: var(--color-historia); }
+
+.tarjeta::before {
+  display: block;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.tarjeta[data-seccion="seccion-animales"]::before { content: "🦁"; }
+.tarjeta[data-seccion="seccion-cuerpo"]::before   { content: "🫀"; }
+.tarjeta[data-seccion="seccion-historia"]::before { content: "🏛️"; }
+
+
+/* ---------- 6 b. Filtro de favoritas y contadores de la portada ---------- */
+
+/* El filtro ocupa todo el ancho de la grilla, arriba de las tarjetas */
+.filtro-favoritas {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: var(--color-superficie);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 0.8rem 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* La casilla no debe ocupar el 100% como los demás inputs */
+.filtro-favoritas input {
+  width: 1.2rem;
+  height: 1.2rem;
+  accent-color: var(--color-historia);   /* tilde dorado */
+  cursor: pointer;
+}
+
+/* Contadores de las tarjetas, en forma de píldora */
+.progreso-tarjeta,
+.favoritas-tarjeta {
+  display: inline-block;
+  margin-top: 0.75rem;
+  margin-right: 0.4rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background-color: color-mix(in srgb, var(--color-seccion) 15%, #FFFFFF);
+}
+
+.favoritas-tarjeta {
+  background-color: color-mix(in srgb, var(--color-historia) 15%, #FFFFFF);
+}
+
+
+/* =========================================================
+   7. COLOR PROPIO DE CADA SECCIÓN
+   Cada sección reemplaza las variables --color-seccion.
+   Así títulos y botones de adentro toman ese color solos.
+   ========================================================= */
+#seccion-animales {
+  --color-seccion: var(--color-animales);
+  --color-seccion-oscuro: var(--color-animales-oscuro);
+}
+#seccion-cuerpo {
+  --color-seccion: var(--color-cuerpo);
+  --color-seccion-oscuro: var(--color-cuerpo-oscuro);
+}
+#seccion-historia {
+  --color-seccion: var(--color-historia);
+  --color-seccion-oscuro: var(--color-historia-oscuro);
+}
+
+
+/* =========================================================
+   8. ESTRUCTURA DE LAS SECCIONES
+   En celular: título, visor, ficha y botones en una columna.
+   ========================================================= */
+.seccion {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.titulo-seccion {
+  color: var(--color-seccion);
+  font-size: 1.7rem;
+}
+
+/* Emojis delante del título de cada sección */
+#seccion-animales .titulo-seccion::before { content: "🦁 "; }
+#seccion-cuerpo .titulo-seccion::before   { content: "🫀 "; }
+#seccion-historia .titulo-seccion::before { content: "🏛️ "; }
+
+
+/* =========================================================
+   9. VISOR 3D
+   Recuadro grande con esquinas redondeadas y degradado suave.
+   ========================================================= */
+.visor-3d {
+  width: 100%;
+  min-height: 320px;
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  /* Degradado del blanco a un tono muy claro del color de la sección */
+  background: linear-gradient(
+    145deg,
+    #FFFFFF 0%,
+    color-mix(in srgb, var(--color-seccion) 18%, #FFFFFF) 100%
+  );
+  border: 2px solid color-mix(in srgb, var(--color-seccion) 30%, #FFFFFF);
+  overflow: hidden;   /* que el modelo 3D no se salga del recuadro */
+}
+
+/* El <model-viewer> ocupa todo el recuadro (por defecto mide solo 300 × 150 px) */
+.visor-3d model-viewer {
+  display: block;
+  width: 100%;
+  height: 320px;
+  --poster-color: transparent;   /* deja ver el degradado de fondo */
+}
+
+
+/* =========================================================
+   10. FICHA INFORMATIVA
+   ========================================================= */
+.ficha {
+  background-color: var(--color-superficie);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 1.5rem;
+}
+
+.ficha-titulo {
+  color: var(--color-seccion);
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.ficha-descripcion {
+  margin-bottom: 1rem;
+}
+
+/* Fila con el indicador "✓ Vista" y el botón Favorito */
+.ficha-estado {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.indicador-vista {
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-seccion-oscuro);
+  background-color: color-mix(in srgb, var(--color-seccion) 15%, #FFFFFF);
+}
+
+/* Botón Favorito: apagado = borde dorado; prendido = fondo dorado */
+.boton-favorito {
+  font-family: var(--fuente-titulos);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-texto);
+  background-color: var(--color-superficie);
+  border: 2px solid var(--color-historia);
+  border-radius: 999px;
+  padding: 0.3rem 0.9rem;
+  cursor: pointer;
+  transition: background-color var(--transicion), transform var(--transicion);
+}
+
+.boton-favorito:hover,
+.boton-favorito:focus-visible {
+  background-color: color-mix(in srgb, var(--color-historia) 15%, #FFFFFF);
+  transform: translateY(-2px);
+}
+
+.boton-favorito[aria-pressed="true"] {
+  background-color: var(--color-historia);
+  color: #FFFFFF;
+}
+
+/* Botón Volver: alineado a la izquierda, sin estirarse */
+.boton-volver {
+  justify-self: start;
+}
+
+.ficha h4 {
+  color: var(--color-seccion);
+  margin-bottom: 0.5rem;
+}
+
+.ficha h4::before {
+  content: "💡 ";
+}
+
+.ficha-creditos {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+.ficha-creditos::before {
+  content: "📝 ";
+}
+
+
+/* =========================================================
+   11. ELEMENTOS DE LISTA COMO TARJETAS
+   Cada dato curioso aparece como una mini tarjeta.
+   ========================================================= */
+.ficha-curiosidades {
+  list-style: none;          /* saca los puntos de la lista */
+  display: grid;
+  gap: 0.6rem;
+}
+
+.ficha-curiosidades li {
+  background-color: var(--color-fondo);
+  border-left: 4px solid var(--color-seccion);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 0.75rem 1rem;
+}
+
+
+/* =========================================================
+   12. FORMULARIOS
+   Por ahora no hay formularios, pero quedan listos para
+   cuando los agreguemos: tarjeta con campos prolijos.
+   ========================================================= */
+form {
+  background-color: var(--color-superficie);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra);
+  padding: 1.5rem;
+  display: grid;
+  gap: 1rem;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  font-family: var(--fuente-texto);
+  font-size: 1rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid var(--color-borde);
+  border-radius: 10px;
+  background-color: var(--color-superficie);
+  transition: border-color var(--transicion);
+}
+
+/* Resalta el campo cuando el usuario escribe en él */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--color-seccion);
+}
+
+
+/* ---------- 12 b. Campos, errores y mensajes del formulario ---------- */
+
+/* Cada campo: etiqueta arriba, control y error abajo */
+.campo {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.campo label {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Texto de error en rojo debajo del campo */
+.mensaje-error {
+  color: var(--color-error);
+  font-size: 0.85rem;
+}
+
+/* Si no hay error, el párrafo no ocupa lugar */
+.mensaje-error:empty {
+  display: none;
+}
+
+.mensaje-error::before {
+  content: "⚠️ ";
+}
+
+/* Borde rojo en el campo que tiene un error */
+.campo-invalido,
+.campo-invalido:focus {
+  border-color: var(--color-error);
+  background-color: var(--color-error-fondo);
+}
+
+.mensaje-exito {
+  color: var(--color-animales-oscuro);
+  font-weight: 600;
+}
+
+.acciones-formulario {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+
+/* ---------- 12 c. Sección Administrar y listado de fichas ---------- */
+.administrar {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  margin-top: 2.5rem;
+}
+
+.administrar .titulo-seccion::before {
+  content: "🛠️ ";
+}
+
+.listado h3 {
+  margin-bottom: 0.75rem;
+}
+
+/* Cada ficha guardada se muestra como tarjeta */
+.lista-fichas {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.lista-fichas li {
+  background-color: var(--color-superficie);
+  border-radius: 12px;
+  box-shadow: var(--sombra);
+  padding: 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.lista-fichas .etiqueta-seccion {
+  font-size: 0.85rem;
+  color: var(--color-texto-suave);
+}
+
+.acciones-ficha {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Botones más chicos dentro del listado */
+.acciones-ficha .boton {
+  padding: 0.45rem 1rem;
+  font-size: 0.9rem;
+}
+
+
+/* =========================================================
+   13. BOTONES
+   Usan el color de la sección. Al pasar el mouse se
+   oscurecen y suben un poquito.
+   ========================================================= */
+.boton {
+  font-family: var(--fuente-titulos);
+  font-size: 1rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  background-color: var(--color-seccion);
+  border: none;
+  border-radius: 999px;      /* forma de píldora */
+  padding: 0.75rem 1.5rem;
+  cursor: pointer;
+  box-shadow: var(--sombra);
+  transition: background-color var(--transicion),
+              transform var(--transicion),
+              box-shadow var(--transicion);
+}
+
+.boton:hover,
+.boton:focus-visible {
+  background-color: var(--color-seccion-oscuro);
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-elevada);
+}
+
+/* Al hacer clic, vuelve a bajar */
+.boton:active {
+  transform: translateY(0);
+}
+
+/* Botón secundario (Cancelar): blanco con borde */
+.boton-secundario {
+  background-color: var(--color-superficie);
+  color: var(--color-texto);
+  border: 1px solid var(--color-borde);
+}
+
+.boton-secundario:hover,
+.boton-secundario:focus-visible {
+  background-color: var(--color-fondo);
+}
+
+/* Botón de peligro (Borrar): rojo */
+.boton-peligro {
+  background-color: var(--color-error);
+}
+
+.boton-peligro:hover,
+.boton-peligro:focus-visible {
+  background-color: var(--color-error-oscuro);
+}
+
+/* Contenedor de Anterior y Siguiente */
+.navegacion {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.navegacion .boton {
+  flex: 1;   /* los dos botones del mismo ancho */
+}
+
+/* Flechas con emoji */
+[id^="anterior-"]::before  { content: "⬅️ "; }
+[id^="siguiente-"]::after  { content: " ➡️"; }
+
+
+/* =========================================================
+   14. PIE DE PÁGINA
+   ========================================================= */
+.pie {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1.5rem 1rem;
+  background-color: var(--color-superficie);
+  border-top: 1px solid var(--color-borde);
+}
+
+#boton-exportar::before { content: "📤 "; }
+#boton-importar::before { content: "📥 "; }
+
+/* Que el mensaje pueda bajar a otro renglón debajo de los botones */
+.pie {
+  flex-wrap: wrap;
+}
+
+/* Mensaje de exportar/importar: ocupa todo el ancho, debajo de los botones */
+.mensaje-pie {
+  width: 100%;
+  text-align: center;
+  font-weight: 600;
+  color: var(--color-animales-oscuro);   /* verde: todo salió bien */
+}
+
+.mensaje-pie.es-error {
+  color: var(--color-error);             /* rojo: algo salió mal */
+}
+
+.mensaje-pie:empty {
+  display: none;
+}
+
+
+/* =========================================================
+   15. DISEÑO PARA PANTALLAS GRANDES (desde 768 px)
+   Pasamos a dos columnas.
+   ========================================================= */
+@media (min-width: 768px) {
+
+  .encabezado h1 {
+    font-size: 2.4rem;
+  }
+
+  /* Portada: tarjetas en dos columnas */
+  .portada {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Sección: visor a la izquierda y ficha a la derecha */
+  .seccion {
+    grid-template-columns: 3fr 2fr;
+    align-items: start;
+  }
+
+  /* El título y los botones ocupan las dos columnas */
+  .boton-volver,
+  .titulo-seccion,
+  .navegacion {
+    grid-column: 1 / -1;
+  }
+
+  .visor-3d {
+    min-height: 450px;
+  }
+
+  .visor-3d model-viewer {
+    height: 450px;
+  }
+
+  /* Administrar: formulario a la izquierda y listado a la derecha */
+  .administrar {
+    grid-template-columns: 3fr 2fr;
+    align-items: start;
+  }
+
+  .administrar .titulo-seccion {
+    grid-column: 1 / -1;
+  }
+}
+
+
+/* =========================================================
+   16. AJUSTES PARA EL CELULAR (Práctico 11, paso 1)
+   ========================================================= */
+
+/* Nada puede ser más ancho que la pantalla (evita el scroll de costado) */
+img,
+model-viewer {
+  max-width: 100%;
+}
+
+/* Los enlaces largos de los créditos se cortan en vez de ensanchar la página */
+.ficha-creditos,
+.lista-fichas strong {
+  overflow-wrap: anywhere;
+}
+
+/* Todo lo que se toca con el dedo mide al menos 44 px de alto */
+.boton,
+.boton-favorito,
+input,
+select,
+textarea,
+.filtro-favoritas {
+  min-height: 44px;
+}
+
+/* 16 px como mínimo en los campos: con menos, el iPhone hace zoom al tocarlos */
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+/* Celulares (menos de 600 px): Anterior y Siguiente quedan en una
+   barra fija abajo, cómoda para el pulgar */
+@media (max-width: 599px) {
+  .seccion .navegacion {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    background-color: var(--color-superficie);
+    box-shadow: 0 -4px 14px rgba(0, 0, 0, 0.1);
+    /* env(safe-area-inset-bottom) deja lugar a la barrita de inicio del iPhone */
+    padding: 0.6rem 1rem calc(0.6rem + env(safe-area-inset-bottom));
+  }
+
+  /* Espacio abajo para que la barra fija no tape el pie ni el formulario */
+  body:has(.seccion:not([hidden])) {
+    padding-bottom: 80px;
+  }
+
+  /* Botones del pie a lo ancho, uno al lado del otro */
+  .pie .boton {
+    flex: 1;
+  }
+}

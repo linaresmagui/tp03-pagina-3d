@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<!-- Indicamos que el idioma de la página es español -->
+<html lang="es">
+<head>
+  <!-- Codificación de caracteres: permite usar tildes y ñ sin problemas -->
+  <meta charset="UTF-8">
+  <!-- Hace que la página se adapte al ancho de celulares y tablets -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Título que aparece en la pestaña del navegador -->
+  <title>Explorador 3D Educativo</title>
+  <!-- Ícono de la pestaña hecho con un emoji (evita el error 404 de favicon.ico) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌍</text></svg>">
+  <!-- PWA: "documento de identidad" de la app (nombre, íconos, colores) -->
+  <link rel="manifest" href="manifest.json">
+  <!-- PWA: color de la barra superior del celular -->
+  <meta name="theme-color" content="#27AE60">
+  <!-- PWA: ícono para la pantalla de inicio del iPhone -->
+  <link rel="apple-touch-icon" href="icono-192.png">
+  <!-- Enlace a la hoja de estilos -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Librería <model-viewer> 4.0.0 desde el CDN de Google.
+       type="module" es obligatorio: la librería está escrita como módulo de JavaScript -->
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <!-- Copia de los modelos como texto: permite verlos abriendo la página con doble clic -->
+  <script src="modelos/modelos-embebidos.js" defer></script>
+  <!-- Enlace al JavaScript. "defer" hace que se ejecute cuando el HTML ya terminó de cargarse -->
+  <script src="app.js" defer></script>
+</head>
+<body>
+
+  <!-- ===================== ENCABEZADO ===================== -->
+  <header class="encabezado">
+    <h1>Explorador 3D Educativo</h1>
+    <p>Elegí una sección para empezar a explorar</p>
+  </header>
+
+  <!-- ===================== CONTENIDO PRINCIPAL ===================== -->
+  <main>
+
+    <!-- ---------- PORTADA: tres tarjetas para entrar a cada sección ---------- -->
+    <section id="portada" class="portada">
+      <!-- Filtro: si está tildado, en las secciones solo se ven las fichas favoritas -->
+      <label class="filtro-favoritas">
+        <input type="checkbox" id="filtro-favoritas">
+        ⭐ Ver solo favoritas
+      </label>
+
+      <!-- Cada tarjeta es un botón; "data-seccion" guarda a qué sección lleva -->
+      <button class="tarjeta" data-seccion="seccion-animales">
+        <h2>Animales</h2>
+        <p>Conocé animales de todo el mundo en 3D.</p>
+        <!-- Contadores de progreso: los completa app.js -->
+        <span class="progreso-tarjeta" id="progreso-animales">✓ 0 de 0 vistas</span>
+        <span class="favoritas-tarjeta" id="favoritas-animales">⭐ 0 favoritas</span>
+      </button>
+
+      <button class="tarjeta" data-seccion="seccion-cuerpo">
+        <h2>Cuerpo humano</h2>
+        <p>Explorá los órganos y sistemas del cuerpo.</p>
+        <!-- Contadores de progreso: los completa app.js -->
+        <span class="progreso-tarjeta" id="progreso-cuerpo">✓ 0 de 0 vistas</span>
+        <span class="favoritas-tarjeta" id="favoritas-cuerpo">⭐ 0 favoritas</span>
+      </button>
+
+      <button class="tarjeta" data-seccion="seccion-historia">
+        <h2>Historia</h2>
+        <p>Descubrí objetos y monumentos históricos.</p>
+        <!-- Contadores de progreso: los completa app.js -->
+        <span class="progreso-tarjeta" id="progreso-historia">✓ 0 de 0 vistas</span>
+        <span class="favoritas-tarjeta" id="favoritas-historia">⭐ 0 favoritas</span>
+      </button>
+    </section>
+
+    <!-- ---------- SECCIÓN ANIMALES ---------- -->
+    <!-- "hidden" oculta la sección al principio; después JavaScript la mostrará -->
+    <section id="seccion-animales" class="seccion" hidden>
+      <!-- Vuelve a la portada (necesario para abrir y cerrar secciones) -->
+      <button type="button" class="boton boton-secundario boton-volver">⬅️ Volver a la portada</button>
+      <h2 class="titulo-seccion">Animales</h2>
+
+      <!-- Contenedor donde más adelante se va a mostrar el modelo 3D -->
+      <div id="visor-animales" class="visor-3d">
+        <!-- Visor 3D del tiranosaurio.
+             src: ruta del archivo .glb
+             alt: descripción para lectores de pantalla
+             camera-controls: permite rotar y hacer zoom con mouse o dedos
+             auto-rotate: el modelo gira solo cuando nadie lo toca
+             touch-action="pan-y": en el celular, deslizar hacia arriba o abajo
+                                   sigue moviendo la página
+             camera-orbit: ángulo horizontal, ángulo vertical y distancia de la cámara -->
+        <model-viewer
+          id="modelo-animales"
+          src="modelos/tiranosaurio.glb"
+          alt="Modelo 3D de un tiranosaurio rex de pie, con cabeza grande, mandíbulas con dientes afilados, brazos cortos y cola larga"
+          camera-controls
+          auto-rotate
+          touch-action="pan-y"
+          camera-orbit="0deg 75deg 105%">
+        </model-viewer>
+      </div>
+
+      <!-- Ficha informativa del modelo que se está viendo -->
+      <article class="ficha">
+        <h3 id="titulo-animales" class="ficha-titulo">Título del modelo</h3>
+
+        <!-- Estado de la ficha: vista (✓) y favorita (⭐) -->
+        <div class="ficha-estado">
+          <span id="vista-animales" class="indicador-vista" hidden>✓ Vista</span>
+          <!-- aria-pressed indica si el botón está "prendido" (favorita) o no -->
+          <button type="button" id="favorito-animales" class="boton-favorito" aria-pressed="false">⭐ Favorito</button>
+        </div>
+        <p id="descripcion-animales" class="ficha-descripcion">Descripción del modelo.</p>
+
+        <h4>Datos curiosos</h4>
+        <!-- Lista vacía: JavaScript la va a completar con los datos curiosos -->
+        <ul id="curiosidades-animales" class="ficha-curiosidades"></ul>
+
+        <!-- Créditos: autor y licencia del modelo 3D -->
+        <p id="creditos-animales" class="ficha-creditos">Créditos del modelo.</p>
+      </article>
+
+      <!-- Botones para pasar de un modelo a otro -->
+      <div class="navegacion">
+        <button id="anterior-animales" class="boton">Anterior</button>
+        <button id="siguiente-animales" class="boton">Siguiente</button>
+      </div>
+    </section>
+
+    <!-- ---------- SECCIÓN CUERPO HUMANO ---------- -->
+    <section id="seccion-cuerpo" class="seccion" hidden>
+      <!-- Vuelve a la portada (necesario para abrir y cerrar secciones) -->
+      <button type="button" class="boton boton-secundario boton-volver">⬅️ Volver a la portada</button>
+      <h2 class="titulo-seccion">Cuerpo humano</h2>
+
+      <div id="visor-cuerpo" class="visor-3d"></div>
+
+      <article class="ficha">
+        <h3 id="titulo-cuerpo" class="ficha-titulo">Título del modelo</h3>
+
+        <!-- Estado de la ficha: vista (✓) y favorita (⭐) -->
+        <div class="ficha-estado">
+          <span id="vista-cuerpo" class="indicador-vista" hidden>✓ Vista</span>
+          <!-- aria-pressed indica si el botón está "prendido" (favorita) o no -->
+          <button type="button" id="favorito-cuerpo" class="boton-favorito" aria-pressed="false">⭐ Favorito</button>
+        </div>
+        <p id="descripcion-cuerpo" class="ficha-descripcion">Descripción del modelo.</p>
+
+        <h4>Datos curiosos</h4>
+        <ul id="curiosidades-cuerpo" class="ficha-curiosidades"></ul>
+
+        <p id="creditos-cuerpo" class="ficha-creditos">Créditos del modelo.</p>
+      </article>
+
+      <div class="navegacion">
+        <button id="anterior-cuerpo" class="boton">Anterior</button>
+        <button id="siguiente-cuerpo" class="boton">Siguiente</button>
+      </div>
+    </section>
+
+    <!-- ---------- SECCIÓN HISTORIA ---------- -->
+    <section id="seccion-historia" class="seccion" hidden>
+      <!-- Vuelve a la portada (necesario para abrir y cerrar secciones) -->
+      <button type="button" class="boton boton-secundario boton-volver">⬅️ Volver a la portada</button>
+      <h2 class="titulo-seccion">Historia</h2>
+
+      <div id="visor-historia" class="visor-3d"></div>
+
+      <article class="ficha">
+        <h3 id="titulo-historia" class="ficha-titulo">Título del modelo</h3>
+
+        <!-- Estado de la ficha: vista (✓) y favorita (⭐) -->
+        <div class="ficha-estado">
+          <span id="vista-historia" class="indicador-vista" hidden>✓ Vista</span>
+          <!-- aria-pressed indica si el botón está "prendido" (favorita) o no -->
+          <button type="button" id="favorito-historia" class="boton-favorito" aria-pressed="false">⭐ Favorito</button>
+        </div>
+        <p id="descripcion-historia" class="ficha-descripcion">Descripción del modelo.</p>
+
+        <h4>Datos curiosos</h4>
+        <ul id="curiosidades-historia" class="ficha-curiosidades"></ul>
+
+        <p id="creditos-historia" class="ficha-creditos">Créditos del modelo.</p>
+      </article>
+
+      <div class="navegacion">
+        <button id="anterior-historia" class="boton">Anterior</button>
+        <button id="siguiente-historia" class="boton">Siguiente</button>
+      </div>
+    </section>
+
+    <!-- ---------- ADMINISTRAR FICHAS: formulario + listado ---------- -->
+    <section id="seccion-administrar" class="administrar">
+      <h2 class="titulo-seccion">Administrar fichas</h2>
+
+      <!-- "novalidate" desactiva los avisos automáticos del navegador:
+           las validaciones las hacemos nosotros en app.js -->
+      <form id="formulario-ficha" novalidate>
+        <h3 id="titulo-formulario">Nueva ficha</h3>
+
+        <!-- Campo oculto: guarda el id de la ficha que se está editando.
+             Si está vacío, el formulario crea una ficha nueva -->
+        <input type="hidden" id="campo-id">
+
+        <!-- Cada .campo tiene: etiqueta, control y un párrafo para el error -->
+        <div class="campo">
+          <label for="campo-seccion">Sección *</label>
+          <select id="campo-seccion">
+            <option value="">Elegí una sección</option>
+            <option value="seccion-animales">Animales</option>
+            <option value="seccion-cuerpo">Cuerpo humano</option>
+            <option value="seccion-historia">Historia</option>
+          </select>
+          <p class="mensaje-error" id="error-seccion"></p>
+        </div>
+
+        <div class="campo">
+          <label for="campo-titulo">Título *</label>
+          <input type="text" id="campo-titulo" placeholder="Ej.: León africano">
+          <p class="mensaje-error" id="error-titulo"></p>
+        </div>
+
+        <div class="campo">
+          <label for="campo-modelo">Ruta del modelo *</label>
+          <!-- autocapitalize="none": el celular no pone "Modelos/" con mayúscula (la validación pide minúsculas) -->
+          <input type="text" id="campo-modelo" placeholder="modelos/nombre.glb"
+                 autocapitalize="none" autocorrect="off" spellcheck="false">
+          <p class="mensaje-error" id="error-modelo"></p>
+        </div>
+
+        <div class="campo">
+          <label for="campo-descripcion">Descripción *</label>
+          <textarea id="campo-descripcion" rows="3"></textarea>
+          <p class="mensaje-error" id="error-descripcion"></p>
+        </div>
+
+        <div class="campo">
+          <label for="campo-curiosidades">Datos curiosos (uno por renglón)</label>
+          <textarea id="campo-curiosidades" rows="3"></textarea>
+        </div>
+
+        <div class="campo">
+          <label for="campo-autor">Autor del modelo *</label>
+          <input type="text" id="campo-autor" placeholder="Nombre o usuario del autor">
+          <p class="mensaje-error" id="error-autor"></p>
+        </div>
+
+        <div class="campo">
+          <label for="campo-licencia">Licencia *</label>
+          <select id="campo-licencia">
+            <option value="">Elegí una licencia</option>
+            <option value="CC0">CC0</option>
+            <option value="CC BY 4.0">CC BY 4.0</option>
+            <option value="CC BY-SA 4.0">CC BY-SA 4.0</option>
+          </select>
+          <p class="mensaje-error" id="error-licencia"></p>
+        </div>
+
+        <div class="campo">
+          <label for="campo-fuente">Fuente (enlace)</label>
+          <!-- type="url": el celular muestra un teclado con ".com" y "/" -->
+          <input type="url" id="campo-fuente" placeholder="https://..."
+                 inputmode="url" autocapitalize="none" autocorrect="off" spellcheck="false">
+        </div>
+
+        <div class="acciones-formulario">
+          <button type="submit" class="boton">Guardar ficha</button>
+          <!-- Solo se ve mientras se edita una ficha -->
+          <button type="button" id="boton-cancelar" class="boton boton-secundario" hidden>Cancelar edición</button>
+        </div>
+
+        <!-- Mensaje de confirmación; role="status" hace que los lectores de pantalla lo anuncien -->
+        <p id="mensaje-exito" class="mensaje-exito" role="status"></p>
+      </form>
+
+      <!-- Listado de fichas guardadas, con botones Editar y Borrar -->
+      <div class="listado">
+        <h3>Fichas guardadas</h3>
+        <ul id="lista-fichas" class="lista-fichas"></ul>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===================== PIE DE PÁGINA ===================== -->
+  <footer class="pie">
+    <!-- Descarga los datos guardados en localStorage como archivo -->
+    <button id="boton-exportar" class="boton">Exportar</button>
+    <!-- Abre el selector de archivos para cargar datos -->
+    <button id="boton-importar" class="boton">Importar</button>
+    <!-- Selector de archivos oculto: el botón Importar lo va a "clickear" desde JavaScript -->
+    <input type="file" id="archivo-importar" accept=".json,application/json" hidden>
+    <!-- Mensajes de exportar/importar (éxito en verde, error en rojo) -->
+    <p id="mensaje-pie" class="mensaje-pie" role="status"></p>
+  </footer>
+
+</body>
+</html>
