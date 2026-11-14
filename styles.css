@@ -734,3 +734,19 @@ textarea {
     flex: 1;
   }
 }
+
+
+/* =========================================================
+   17. AVISO "SIN CONEXIÓN" (Práctico 11, paso 7)
+   Franja fina arriba de todo, dentro de la página (no flota):
+   así nunca se superpone a botones ni formularios.
+   ========================================================= */
+.aviso-sin-conexion {
+  padding: 0.45rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #5D4300;
+  background-color: #FFF3C4;          /* amarillo suave: avisa sin alarmar */
+  border-bottom: 1px solid #F0D98A;
+}

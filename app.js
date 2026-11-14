@@ -812,12 +812,8 @@ function mostrarMensajePie(texto, esError) {
 }
 
 // ---------- EXPORTAR ----------
-botonExportar.addEventListener("click", function () {
-  const datos = { fichas: fichas, progreso: progreso };
-
-  // null, 2 = con sangría de 2 espacios, para que se pueda leer
-  const texto = JSON.stringify(datos, null, 2);
-
+// Descarga el texto como archivo web3d.json (la forma de siempre)
+function descargarJSON(texto) {
   // Un Blob es un "archivo en memoria" armado con nuestro texto
   const blob = new Blob([texto], { type: "application/json" });
   const url = URL.createObjectURL(blob); // dirección temporal hacia ese Blob
@@ -832,6 +828,44 @@ botonExportar.addEventListener("click", function () {
 
   URL.revokeObjectURL(url); // liberamos la memoria
   mostrarMensajePie("📤 Se descargó web3d.json con " + fichas.length + " fichas.", false);
+}
+
+botonExportar.addEventListener("click", function () {
+  const datos = { fichas: fichas, progreso: progreso };
+
+  // null, 2 = con sangría de 2 espacios, para que se pueda leer
+  const texto = JSON.stringify(datos, null, 2);
+
+  // ¿Es un celular o tablet? (pantalla táctil como puntero principal)
+  const esCelular = window.matchMedia("(pointer: coarse)").matches;
+
+  // Armamos un archivo de verdad para poder compartirlo
+  const archivo = new File([texto], "web3d.json", { type: "application/json" });
+
+  // En celulares que permiten compartir archivos, abrimos el menú "Compartir"
+  // (WhatsApp, correo, Drive...). Antes comprobamos con canShare que se pueda.
+  if (esCelular && navigator.canShare && navigator.canShare({ files: [archivo] })) {
+    navigator.share({
+      files: [archivo],
+      title: "web3d.json",
+      text: "Datos de Explorador 3D Educativo"
+    })
+      .then(function () {
+        mostrarMensajePie("📤 Se compartió web3d.json con " + fichas.length + " fichas.", false);
+      })
+      .catch(function (error) {
+        if (error.name === "AbortError") {
+          // El usuario cerró el menú sin elegir nada
+          mostrarMensajePie("Compartir cancelado.", false);
+        } else {
+          // Si compartir falla por otro motivo, lo descargamos como siempre
+          descargarJSON(texto);
+        }
+      });
+  } else {
+    // En la compu (o si el celular no puede compartir): descarga normal
+    descargarJSON(texto);
+  }
 });
 
 // ---------- IMPORTAR ----------
@@ -981,3 +1015,22 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
       });
   });
 }
+
+
+/* =========================================================
+   15. AVISO "SIN CONEXIÓN" (Práctico 11, paso 7)
+   ========================================================= */
+const avisoSinConexion = document.getElementById("aviso-sin-conexion");
+
+// Muestra el aviso si no hay internet y lo oculta si hay
+function actualizarAvisoConexion() {
+  avisoSinConexion.hidden = navigator.onLine;
+}
+
+// El navegador avisa cuando se pierde (offline) o vuelve (online) internet
+window.addEventListener("offline", actualizarAvisoConexion);
+window.addEventListener("online", actualizarAvisoConexion);
+
+// Revisamos al abrir la app (por si ya arranca sin conexión)
+actualizarAvisoConexion();
+
