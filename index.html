@@ -34,6 +34,11 @@
     📴 Sin conexión: tus datos se siguen guardando en este celular
   </div>
 
+  <!-- Aviso que aparece cuando se descargó una versión nueva de la app -->
+  <div id="aviso-version-nueva" class="aviso-version-nueva" role="status" hidden>
+    🔄 Hay una versión nueva: cerrá y volvé a abrir la app
+  </div>
+
   <header class="encabezado">
     <h1>Explorador 3D Educativo</h1>
     <p>Elegí una sección para empezar a explorar</p>
@@ -296,6 +301,8 @@
     <input type="file" id="archivo-importar" accept=".json,application/json" hidden>
     <!-- Mensajes de exportar/importar (éxito en verde, error en rojo) -->
     <p id="mensaje-pie" class="mensaje-pie" role="status"></p>
+    <!-- Número de versión: cambialo junto con VERSION de sw.js para ver que llegó la actualización -->
+    <p class="version-app">Versión 3</p>
   </footer>
 
 </body>

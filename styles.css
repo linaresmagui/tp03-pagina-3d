@@ -750,3 +750,24 @@ textarea {
   background-color: #FFF3C4;          /* amarillo suave: avisa sin alarmar */
   border-bottom: 1px solid #F0D98A;
 }
+
+
+/* =========================================================
+   18. AVISO DE VERSIÓN NUEVA Y NÚMERO DE VERSIÓN (paso 8)
+   ========================================================= */
+.aviso-version-nueva {
+  padding: 0.45rem 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  background-color: var(--color-animales);   /* verde de la app */
+}
+
+/* Texto chiquito y gris en el pie */
+.version-app {
+  width: 100%;
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--color-texto-suave);
+}

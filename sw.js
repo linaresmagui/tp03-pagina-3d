@@ -6,7 +6,7 @@
    ========================================================= */
 
 // Versión de la caché. Cambiala ("v2", "v3"...) cada vez que publiques cambios
-const VERSION = "v2";
+const VERSION = "v3";
 
 // Nombre de la caché. Lleva el nombre de la app adelante porque en GitHub Pages
 // todas tus apps comparten el mismo sitio (tuusuario.github.io): así no se pisan.

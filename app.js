@@ -1007,8 +1007,23 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
   // Esperamos a que la página termine de cargar para no demorarla
   window.addEventListener("load", function () {
     navigator.serviceWorker.register("./sw.js")
-      .then(function () {
+      .then(function (registro) {
         console.log("Service worker registrado: la app ya funciona sin internet.");
+
+        // Paso 8: avisar cuando se descarga una versión nueva.
+        // "updatefound" ocurre cuando el navegador encuentra un sw.js distinto
+        registro.addEventListener("updatefound", function () {
+          const nuevo = registro.installing; // el service worker nuevo que se está instalando
+
+          nuevo.addEventListener("statechange", function () {
+            // "installed" = ya guardó los archivos nuevos.
+            // Si ya había uno funcionando (controller), es una ACTUALIZACIÓN y avisamos.
+            // (La primera instalación no muestra el aviso.)
+            if (nuevo.state === "installed" && navigator.serviceWorker.controller) {
+              document.getElementById("aviso-version-nueva").hidden = false;
+            }
+          });
+        });
       })
       .catch(function (error) {
         console.warn("No se pudo registrar el service worker:", error);
